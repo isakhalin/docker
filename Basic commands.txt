@@ -1,0 +1,348 @@
+docker version	-	-	- Проверить версию докера
+docker ps		-	-	- Показывает запущенные контейнеры
+docker ps -a	-	-	- Показывает список запущенных и остановленных контейнеров
+docker images	-	-	- Показывает список локальных образов
+docker pull hello-world -	- Скачать и сохранить локально образ hello-world
+docker run hello-world:latest	- Скачивает образ hello-world, сохраняет его локально и запускает контейнер из образа hello-world
+docker rm b6e3380e1ca6	-	- Удаляет контейнер с ID b6e3380e1ca6
+docker rmi [ID/NAME]	-	- Удаляет образ по его ID или имени
+docker run -i -t busybox	- Запустить контейнер busybox и подключиться к процессу, выполняемому в контейнере busybox
+	или docker run -it busybox
+	-i - интерактивный
+	-t - терминал
+docker container prune	-	- Удаляет все остановленные контейнеры
+docker run -d nginx	-	- Создать контейнер из образа nginx и запустить его в фоновом режиме
+	ключ -d - detached т.е. отсоединенный
+docker container inspect [id] - Посмотреть свойства контейнера. Где ID это ID контейнера
+	или с фильтром docker container inspect ebc49d5a56be | grep IPAddress
+docker stop [ID]	-	-	- Остановить контейнер с указанным ID
+	или docker kill [ID] - процесс будет остановлен моментально
+docker exec -it [ID] bash	- Выполняет команду в уже запущенном контейнере, где: 
+	-it это интеррактивный терминал
+	bash это название процесса
+	cd /usr/share/nginx/html тут находится index.html в Nginx
+docker run -d --name my_nginx nginx - Создать контейнер c именем my_nginx из образа nginx и запустить его в фоновом режиме
+docker run -p 8080:80 nginx	- Создает и запускает контейнер из образа nginx, где:
+	-p - публикация порта
+	8080 - внешний порт
+	80 порт контейнера
+docker run -d -p 3000:80 -e PORT=80
+	-e PORT=80	- Устанавливает значение переменной PORT в окружении ENV
+docker run -d -p 3000:80 --env-file ./config/.env
+	--env-file ./config/.env	- Подкидывае в контейнер env файл
+docker run -v ${PWD}:/usr/share/nginx/html nginx - Создан и запущен контейнер nginx 
+	и содержимое папки /usr/share/nginx/html будет заменено на содержимое папки из переменной PWD
+	-v это подключение тома
+	${PWD} это путь к локальной папке. Переменная PWD возвращает путь к текущей папке 
+	/usr/share/nginx/html это путь папки внутри контейнера
+docker volume ls	-	-	- Посмотреть все вольюмы
+docker volume inspect [имя вольюма] - Посмотреть свойства конкретного вольюма
+docker volume rm [имя вольюма]	- Удаляет конкретный вольюм
+docker volume create [имя вольюма]	- Создает имя вольма с именем
+docker run -it --rm busybox - Опция --rm удалит контейнер после его остановки
+docker run --restart unless-stopped nginx	- Контейнер будет перезапускаться после рестарта сервера или сбоя
+docker update --restart unless-stopped [container_id] - Обновить опции, если контейнер уже запущен
+
+Разбитие команды на несколько строк для powershell
+docker run `
+	--name my_nginx `
+	-v ${PWD}:/usr/share/nginx/html `
+	-p 8080:80 `
+	-d `
+	--rm `
+	nginx
+
+Разбитие команды на несколько строк для bash
+docker run \
+	--name my_nginx \
+	-v ${PWD}:/usr/share/nginx/html \
+	-p 8080:80 \
+	-d \
+	--rm \
+	nginx
+
+===== Dockerfile =====
+
+Для создания образа необходимо создать в папке с приложением(которое хотим поместить в контейнер) файл Dockerfile и поместит в него следующие инструкции:
+-----
+FROM node:alpine			- Указывает какой базовый образ использовать
+WORKDIR /app			- создает папку app приложения в контейнере
+COPY . .				- копируюет из текущей папки(где запускаем создание контейнера) в папку /app
+CMD ["node", "app.js"]		- указывает какой процесс(node) должен быть запущен при старте котейнера и какой файл(app.js)
+-----
+FROM node
+WORKDIR /app
+COPY package.json /app
+RUN npm install
+COPY . .
+ENV PORT 4200			- Назначает значение переменной PORT в окружении ENV
+EXPOSE ${PORT}			- Указывает на каком порту будет работать контейнер (берет из переменной PORT)
+VOLUME ["/app/data"]		- Подключает вольюм в контейнер 
+CMD ["node", "app.js"]
+-----
+
+Чтобы запретить копировать что-либо в контейнер, нужно создать файл .dockerignore рядом с файлом Dockerfile, содержимое:
+node_modules
+.git
+Dockerfile
+.idea
+
+
+Чтобы собрать образ нужно перейти в папку, где находится Dockerfile и выполнить:
+docker build . -t my-node-app
+	. означает текущую директорию
+	-t указывает тег образа(имя образа)
+
+===================
+
+Чтобы запушить образ в репозиторий repo(имя своего репозитория) нужно переименовать образ в следующий вид: 
+docker tag [имя образа] [имя репозитория]/[имя образа]
+После чего можно его запушить:
+docker push [имя репозитория]/[имя образа]
+
+
+======= Docker-compose ========
+docker-compose up -d		- Запускает выполнение docker-compose.yml в фоновом(детач) режиме
+docker-compose down		- Останавливает все контейнеры и удаляет их
+
+Пример содержания docker-compose.yml:
+ version: '3'
+
+services:
+  app:
+    image: 
+  nginx:
+    build: /nginx		- Путь до докерфайла, с помощью которого будет собран образ
+    restart: always
+  node-app:
+    build: /app
+    container_name: node-vksplanner
+    ports:
+      - 3005:3005
+    restart: always
+    env_file: /app/.env
+    # environment:
+    #   PORT: 3005
+    #   DB_URL: mongodb+srv://isakhalin:56i18N94d37iGo@cluster0.vkp8tnh.mongodb.net/VKSPlaner?retryWrites=true&w=majority
+
+======= Запуск нескольких сайтов в контейнере Nginx с маппингом томов (без сборки образа) =======
+1. Создать на целевом сервере папку [любой каталог]/web-server
+2. Скопировать на целевой сервер в папку /web-server папки с билдами, допустим в /web-server/builds
+3. Скопировать на целевой сервер в папку /web-server файла конфигурации default.conf, его содержание (требует настройки):
+
+server {
+    listen       80;
+    listen  [::]:80;
+    server_name  site1;
+
+    #access_log  /var/log/nginx/host.access.log  main;
+
+    location / {
+        root   /builds/site1;
+        index  index.html index.htm;
+    }
+
+    #error_page  404              /404.html;
+
+    # redirect server error pages to the static page /50x.html
+    #
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /builds/site1;
+    }
+
+    # proxy the PHP scripts to Apache listening on 127.0.0.1:80
+    #
+    #location ~ \.php$ {
+    #    proxy_pass   http://127.0.0.1;
+    #}
+
+    # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+    #
+    #location ~ \.php$ {
+    #    root           html;
+    #    fastcgi_pass   127.0.0.1:9000;
+    #    fastcgi_index  index.php;
+    #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
+    #    include        fastcgi_params;
+    #}
+
+    # deny access to .htaccess files, if Apache's document root
+    # concurs with nginx's one
+    #
+    #location ~ /\.ht {
+    #    deny  all;
+    #}
+}
+
+server {
+    listen       80;
+    listen  [::]:80;
+    server_name  site2;
+
+    #access_log  /var/log/nginx/host.access.log  main;
+
+    location / {
+        root   /builds/site2;
+        index  index.html index.htm;
+    }
+
+    #error_page  404              /404.html;
+
+    # redirect server error pages to the static page /50x.html
+    #
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /builds/site2;
+    }
+
+    # proxy the PHP scripts to Apache listening on 127.0.0.1:80
+    #
+    #location ~ \.php$ {
+    #    proxy_pass   http://127.0.0.1;
+    #}
+
+    # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+    #
+    #location ~ \.php$ {
+    #    root           html;
+    #    fastcgi_pass   127.0.0.1:9000;
+    #    fastcgi_index  index.php;
+    #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
+    #    include        fastcgi_params;
+    #}
+
+    # deny access to .htaccess files, if Apache's document root
+    # concurs with nginx's one
+    #
+    #location ~ /\.ht {
+    #    deny  all;
+    #}
+}
+
+4. Перейти в каталог /web-server
+5. Выполнить команду:
+sudo docker run \
+--name my_sites \
+-v ${PWD}/builds:/builds \
+-v ${PWD}/default.conf:/etc/nginx/conf.d/default.conf \
+-p 80:80 \
+-d \
+--rm \
+nginx
+
+ 
+======= Запуск нескольких сайтов в контейнере Nginx (Со сборкой образа) =======
+(на любой машине с установленным докером)
+1. Создать папку /anyfolder
+2. Создать папку /anyfolder/builds и поместить туда папки с билдами
+3. В папке /anyfolder cоздать файл конфигурации nginx default.conf, его содержание:
+
+server {
+    listen       80;
+    listen  [::]:80;
+    server_name  site1;
+
+    #access_log  /var/log/nginx/host.access.log  main;
+
+    location / {
+        root   /builds/site1;
+        index  index.html index.htm;
+    }
+
+    #error_page  404              /404.html;
+
+    # redirect server error pages to the static page /50x.html
+    #
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /builds/site1;
+    }
+
+    # proxy the PHP scripts to Apache listening on 127.0.0.1:80
+    #
+    #location ~ \.php$ {
+    #    proxy_pass   http://127.0.0.1;
+    #}
+
+    # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+    #
+    #location ~ \.php$ {
+    #    root           html;
+    #    fastcgi_pass   127.0.0.1:9000;
+    #    fastcgi_index  index.php;
+    #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
+    #    include        fastcgi_params;
+    #}
+
+    # deny access to .htaccess files, if Apache's document root
+    # concurs with nginx's one
+    #
+    #location ~ /\.ht {
+    #    deny  all;
+    #}
+}
+
+server {
+    listen       80;
+    listen  [::]:80;
+    server_name  site2;
+
+    #access_log  /var/log/nginx/host.access.log  main;
+
+    location / {
+        root   /builds/site2;
+        index  index.html index.htm;
+    }
+
+    #error_page  404              /404.html;
+
+    # redirect server error pages to the static page /50x.html
+    #
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /builds/site2;
+    }
+
+    # proxy the PHP scripts to Apache listening on 127.0.0.1:80
+    #
+    #location ~ \.php$ {
+    #    proxy_pass   http://127.0.0.1;
+    #}
+
+    # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+    #
+    #location ~ \.php$ {
+    #    root           html;
+    #    fastcgi_pass   127.0.0.1:9000;
+    #    fastcgi_index  index.php;
+    #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
+    #    include        fastcgi_params;
+    #}
+
+    # deny access to .htaccess files, if Apache's document root
+    # concurs with nginx's one
+    #
+    #location ~ /\.ht {
+    #    deny  all;
+    #}
+}
+
+4. В папке /anyfolder создать файл Dockerfile, его содержание:
+FROM nginx
+WORKDIR /builds
+COPY ./builds .
+COPY default.conf /etc/nginx/conf.d/default.conf
+5. Перейти в паку /anyfolder
+6. Выполнить сборку образа docker:
+build . -t [имя репозитория]/[имя образа]
+7. Запушить образ в Docker Hub:
+docker push [имя репозитория]/[имя образа]
+8. Войти на целевой сервер
+9. Собрать контейнер на новом образе:
+docker run -d --rm -p 80:80 [имя репозитория]/[имя образа]
+
+
+Образы:
+busybox	-	-	- Образ для создания Linux контейнеров
+nginx	-	-	-	- Образ Nginx

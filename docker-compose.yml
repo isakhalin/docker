@@ -1,0 +1,18 @@
+version: '3.9'
+
+services:
+#  nginx:
+#    image: isakhalin/
+  nginx:
+    build: /nginx
+    container_name: moso-app-nginx
+    ports:
+      - 80:80
+    restart: always
+  node-app:
+    build: /app
+    container_name: node-vksplanner
+    ports:
+      - 3005:3005
+    restart: always
+    env_file: /app/.env
