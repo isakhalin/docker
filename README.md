@@ -13,7 +13,7 @@
 Docker
 =======
 Проверить версию докера
-  docker version
+    docker version
 
 Показывает запущенные контейнеры
     docker ps
