@@ -12,7 +12,7 @@
 
 Docker
 =======
-        docker version
+     docker version
 > Проверить версию докера
 
         docker ps
