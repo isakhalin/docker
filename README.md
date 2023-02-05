@@ -38,7 +38,8 @@ Docker
 
     docker run -i -t busybox
 > Запустить контейнер busybox и подключиться к процессу, выполняемому в контейнере busybox 
->> или docker run -it busybox
+>> или 
+>>    docker run -it busybox
 >>> -i - интерактивный
 >>> -t - терминал
 
