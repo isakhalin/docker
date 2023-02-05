@@ -1,6 +1,6 @@
-Test
-# Hash 1
-## Hash 2
+Заголовки
+# Hash 1 # или ====
+## Hash 2 ## или ----
 ### Hash 3 
 #### Hash 4
 ##### Hash 5
@@ -8,7 +8,7 @@ Test
 
 Docker
 =======
-### docker version
+> docker version
 ###### Проверить версию докера
 ### docker ps
 ###### Показывает запущенные контейнеры
