@@ -51,7 +51,7 @@ Docker
 
     docker run -it busybox bash
 
-> -i - интерактивный
+> -i - интерактивный </br>
 > -t - терминал
 
 
