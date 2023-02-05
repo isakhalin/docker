@@ -15,7 +15,7 @@ Docker
      docker version
 > Проверить версию докера
 
-        docker ps
+  docker ps
 > Показывает запущенные контейнеры
 
         docker ps -a
