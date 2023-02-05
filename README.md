@@ -22,11 +22,12 @@ Test
 Удаляет контейнер с ID b6e3380e1ca6
 #### docker rmi [ID/NAME]
 Удаляет образ по его ID или имени
+
 #### docker run -i -t busybox
-Запустить контейнер busybox и подключиться к процессу, выполняемому в контейнере busybox
-	или docker run -it busybox
-	-i - интерактивный
-	-t - терминал
+##### Запустить контейнер busybox и подключиться к процессу, выполняемому в контейнере busybox 
+##### или docker run -it busybox
+##### -i - интерактивный
+#####	-t - терминал
 
 
 # Docker-compose
