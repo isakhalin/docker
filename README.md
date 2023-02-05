@@ -47,12 +47,11 @@ Docker
 Запустить контейнер busybox и подключиться к процессу bash, выполняемому в контейнере busybox:
 
     docker run -i -t busybox bash
+> -i - интерактивный </br>
+> -t - терминал </br>
 > или
 
     docker run -it busybox bash
-
-> -i - интерактивный </br>
-> -t - терминал
 
 
 Docker-compose
