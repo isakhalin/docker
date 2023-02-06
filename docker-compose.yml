@@ -1,10 +1,9 @@
 version: '3.9'
 
 services:
-#  nginx:
-#    image: isakhalin/
   nginx:
     build: /nginx
+    image: isakhalin\moso-app-nginx
     container_name: moso-app-nginx
     ports:
       - 80:80
