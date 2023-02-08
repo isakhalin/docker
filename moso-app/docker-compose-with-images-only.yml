@@ -16,8 +16,8 @@ services:
       - 3005:3005
     restart: always
     environment:
-      PORT: "3005"
-      DB_URL: "mongodb://mongo:27017/vksplanner"
+      PORT: 3005
+      DB_URL: mongodb://mongo:27017/vksplanner
 
   moso-app-nginx:
     image: isakhalin/moso-app-nginx
