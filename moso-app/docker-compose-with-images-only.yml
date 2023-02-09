@@ -4,6 +4,8 @@ services:
   mongo:
     image: mongo
     container_name: moso-app-mongo
+    expose:
+      - 27017
     ports:
       - "27017:27017"
     restart: always
