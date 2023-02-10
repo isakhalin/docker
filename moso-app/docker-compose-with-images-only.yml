@@ -5,7 +5,7 @@ services:
     image: mongo
     container_name: moso-app-mongo
     ports:
-      - 27017:27017
+      - 27018:27017
     restart: always
     #command: --serviceExecutor adaptive
 
