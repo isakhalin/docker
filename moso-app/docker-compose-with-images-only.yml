@@ -15,7 +15,7 @@ services:
         target: /mongo-backups
       - type: bind
         source: /home/stepanov/vksplanner-mongo/mongod.conf
-        target: /etc/mongod.conf
+        target: /etc/mongod.conf.orig
 #      - type: volume
 #        source: mongo-db-backups
 #        target: /mongo/backups
