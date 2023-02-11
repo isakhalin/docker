@@ -55,4 +55,4 @@ services:
 #    restart: always
 
 volumes:
-  mytestvol: test
+  mytestvol:
