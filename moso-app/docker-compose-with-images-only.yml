@@ -9,13 +9,13 @@ services:
       - 27017:27017
     restart: always
     #command: --serviceExecutor adaptive
-    volumes:
+#    volumes:
 #      - /home/stepanov/vksplanner-mongo/backups:/mongo/backups
-      - type: volume
-        source: mytestvol
-        target: /mongo/backups
-        volume:
-          nocopy: true
+#      - type: volume
+#        source: mytestvol
+#        target: /mongo/backups
+#        volume:
+#          nocopy: true
 
   node-vksplanner:
     image: isakhalin/node-vksplanner
