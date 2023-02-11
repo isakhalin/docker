@@ -10,8 +10,19 @@ services:
     #command: --serviceExecutor adaptive
 
   node-app:
-    build: ../../AppointApp_backend
+    build: 
+      dockerfile: ../../AppointApp_backend
     image: isakhalin/node-vksplanner
+#    deploy:
+#      mode: replicated
+#      replicas: 7
+#    resources:
+#      limits:
+#        cpus: '0.60'
+#        memory: 60M
+#      reservations:
+#        cpus: '0.15'
+#        memory: 10M
     container_name: node-vksplanner
     ports:
       - 3005:3005
