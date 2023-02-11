@@ -69,4 +69,5 @@ services:
 
 volumes:
   mongo-db-backups:
-    name: test
+    external:
+      name: test
