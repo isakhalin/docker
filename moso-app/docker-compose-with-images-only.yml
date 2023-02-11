@@ -14,8 +14,7 @@ services:
     container_name: node-vksplanner
     depends_on:
       - mongo
-    ports:
-      - "3005:3005"
+    ports: 3005:3005
     restart: always
     environment:
       PORT: 3005
