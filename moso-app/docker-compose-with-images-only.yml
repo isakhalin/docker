@@ -9,7 +9,7 @@ services:
     restart: always
     #command: --serviceExecutor adaptive
     volumes:
-      - "/mongo/backups:/mongo/backups"
+      - "/home/stepanov/mongo/backups:/mongo/backups"
 
   node-vksplanner:
     image: isakhalin/node-vksplanner
