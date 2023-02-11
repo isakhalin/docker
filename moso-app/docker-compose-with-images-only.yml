@@ -1,7 +1,6 @@
 version: '3.9'
 
 services:
-
   mongo:
     image: mongo
     container_name: moso-app-mongo
@@ -11,14 +10,14 @@ services:
     #command: --serviceExecutor adaptive
     volumes:
 #      - /home/stepanov/vksplanner-mongo/backups:/mongo/backups
-#      - type: bind
-#        source: /home/stepanov/vksplanner-mongo/backups
-#        target: /mongo/backups
-      - type: volume
-        source: mongo-db-backups
+      - type: bind
+        source: /home/stepanov/vksplanner-mongo/backups
         target: /mongo/backups
-        volume:
-          nocopy: true
+#      - type: volume
+#        source: mongo-db-backups
+#        target: /mongo/backups
+#        volume:
+#          nocopy: true
 
   node-vksplanner:
     image: isakhalin/node-vksplanner
