@@ -2,23 +2,23 @@ version: '3.9'
 
 services:
 
-  mongo:
-    image: mongo
-    container_name: moso-app-mongo
-    ports:
-      - 27017:27017
-    restart: always
-    #command: --serviceExecutor adaptive
-    volumes:
-#      - /home/stepanov/vksplanner-mongo/backups:/mongo/backups
-#      - type: bind
-#        source: /home/stepanov/vksplanner-mongo/backups
+#  mongo:
+#    image: mongo
+#    container_name: moso-app-mongo
+#    ports:
+#      - 27017:27017
+#    restart: always
+#    #command: --serviceExecutor adaptive
+#    volumes:
+##      - /home/stepanov/vksplanner-mongo/backups:/mongo/backups
+##      - type: bind
+##        source: /home/stepanov/vksplanner-mongo/backups
+##        target: /mongo/backups
+#      - type: volume
+#        source: mongo-db-backups
 #        target: /mongo/backups
-      - type: volume
-        source: mongo-db-backups
-        target: /mongo/backups
-        volume:
-          nocopy: true
+#        volume:
+#          nocopy: true
 
 #  node-vksplanner:
 #    image: isakhalin/node-vksplanner
