@@ -8,8 +8,8 @@ services:
       - 27017:27017
     restart: always
     #command: --serviceExecutor adaptive
-    #volumes:
-    #  - "/mongo/backups:/mongo/backups"
+    volumes:
+      - "/mongo/backups:/mongo/backups"
 
   node-vksplanner:
     image: isakhalin/node-vksplanner
