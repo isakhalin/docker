@@ -10,8 +10,12 @@ services:
     restart: always
     #command: --serviceExecutor adaptive
     volumes:
-#      - "/home/stepanov/vksplanner-mongo/backups:/mongo/backups"
-      - "mytestvol:/mongo/backups"
+#      - /home/stepanov/vksplanner-mongo/backups:/mongo/backups
+      - type: volume
+        source: mytestvol
+        target: /mongo/backups
+        volume:
+          nocopy: true
 
   node-vksplanner:
     image: isakhalin/node-vksplanner
@@ -51,4 +55,4 @@ services:
 #    restart: always
 
 volumes:
-  mytestvol:
+  mytestvol: "test"
