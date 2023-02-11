@@ -10,7 +10,8 @@ services:
     restart: always
     #command: --serviceExecutor adaptive
     volumes:
-      - "/home/stepanov/vksplanner-mongo/backups:/mongo/backups"
+#      - "/home/stepanov/vksplanner-mongo/backups:/mongo/backups"
+      - "mytestvol:/mongo/backups"
 
   node-vksplanner:
     image: isakhalin/node-vksplanner
@@ -48,3 +49,6 @@ services:
 #    ports:
 #      - 80:80
 #    restart: always
+
+volumes:
+  mytestvol:
