@@ -9,25 +9,28 @@ services:
       - 27017:27017
     restart: always
     #command: --serviceExecutor adaptive
-#    volumes:
+    volumes:
 #      - /home/stepanov/vksplanner-mongo/backups:/mongo/backups
-#      - type: volume
-#        source: mytestvol
+#      - type: bind
+#        source: /home/stepanov/vksplanner-mongo/backups
 #        target: /mongo/backups
-#        volume:
-#          nocopy: true
+      - type: volume
+        source: mongo-db-backups
+        target: /mongo/backups
+        volume:
+          nocopy: true
 
-  node-vksplanner:
-    image: isakhalin/node-vksplanner
-    container_name: node-vksplanner
-    depends_on:
-      - mongo
-    ports: 
-      - 3005:3005
-    restart: always
-    environment:
-      PORT: 3005
-      DB_URL: mongodb://mongo:27017/vksplanner
+#  node-vksplanner:
+#    image: isakhalin/node-vksplanner
+#    container_name: node-vksplanner
+#    depends_on:
+#      - mongo
+#    ports: 
+#      - 3005:3005
+#    restart: always
+#    environment:
+#      PORT: 3005
+#      DB_URL: mongodb://mongo:27017/vksplanner
 
   moso-app-nginx:
     image: nginx
@@ -55,4 +58,4 @@ services:
 #    restart: always
 
 volumes:
-  mytestvol:
+  mongo-db-backups:
