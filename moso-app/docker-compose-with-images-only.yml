@@ -6,8 +6,16 @@ services:
     container_name: moso-app-mongo
     ports:
       - 27017:27017
+#      - target: 80
+#        host_ip: 127.0.0.1
+#        published: 8080
+#        protocol: tcp
+#        mode: host
     restart: always
-    #command: --serviceExecutor adaptive
+#    restart: "no"
+#    restart: on-failure
+#    restart: unless-stopped
+#    command: --serviceExecutor adaptive
     volumes:
 #      - /home/stepanov/vksplanner-mongo/backups:/mongo/backups
       - type: bind
@@ -59,5 +67,6 @@ services:
 #      - 80:80
 #    restart: always
 
-#volumes:
-#  mongo-db-backups:
+volumes:
+  mongo-db-backups:
+    name: test
