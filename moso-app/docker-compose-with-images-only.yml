@@ -32,9 +32,9 @@ services:
   moso-app-nginx:
     image: nginx
     container_name: moso-app-nginx
-    volumes:
-      - "/home/stepanov/nginx/default.conf:/etc/nginx/conf.d/default.conf"
-      - "/home/stepanov/nginx/builds:/builds"
+#    volumes:
+#      - "/home/stepanov/nginx/default.conf:/etc/nginx/conf.d/default.conf"
+#      - "/home/stepanov/nginx/builds:/builds"
     #command: node app.js
     depends_on:
       - node-vksplanner
