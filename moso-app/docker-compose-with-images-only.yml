@@ -23,8 +23,8 @@ services:
   node-vksplanner:
     image: isakhalin/node-vksplanner
     container_name: node-vksplanner
-    depends_on:
-      - mongo
+#    depends_on:
+#      - mongo
     ports: 
       - 3005:3005
     restart: always
