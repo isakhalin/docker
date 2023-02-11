@@ -67,7 +67,6 @@ services:
 #      - 80:80
 #    restart: always
 
-volumes:
-  mongo-db-backups:
-    external:
-      name: test
+#volumes:
+#  mongo-db-backups:
+#    name: mongo-db-backups
