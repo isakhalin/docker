@@ -43,7 +43,7 @@ services:
     restart: always
     environment:
       PORT: 3005
-      DB_URL: mongodb://mongo:27017/vksplanner
+      DB_URL: mongodb://vksplanner:738ybfDt@mongo:27017/vksplanner?authSource=vksplanner
 
   moso-app-nginx:
     image: nginx
