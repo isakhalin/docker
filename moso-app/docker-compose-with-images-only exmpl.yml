@@ -1,0 +1,95 @@
+version: '3.9'
+
+services:
+  mongo:
+    hostname: mongo
+    image: mongo
+    container_name: moso-app-mongo
+    ports:
+      - 27017:27017
+      - target: 80
+        host_ip: 127.0.0.1
+        published: 8080
+        protocol: tcp
+        mode: host
+    restart: always | "no" | on-failure | unless-stopped # Параметры авто перезапуска
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    volumes:
+      # Bind in short syntax
+      - /home/stepanov/vksplanner-mongo/backups:/mongo/backups
+      # Bind in long syntax
+      - type: bind
+        source: /home/stepanov/vksplanner-mongo/backups
+        target: /mongo-backups
+      # Volume in long syntax
+      - type: volume
+        source: mongo-db-backups
+        target: /mongo/backups
+        volume:
+          nocopy: true
+    command: mongorestore --drop --dir /mongo-backups/230213_2020 -u root -p root
+    #command: --serviceExecutor adaptive
+    networks:
+           netBackEnd:
+
+  node-vksplanner:
+    hostname: node-vksplanner
+    image: isakhalin/node-vksplanner
+    container_name: node-vksplanner
+    depends_on: # Устанавливает зависимость от указанного сервиса
+      - mongo
+    ports: 
+      - 3005:3005
+    restart: always
+    environment:
+      PORT: 3005
+      DB_URL: mongodb://vksplanner:738ybfDt@mongo:27017/vksplanner?authSource=vksplanner
+
+  moso-app-nginx:
+    image: nginx
+    container_name: moso-app-nginx
+    volumes:
+      # Подгрузить конфиг в Nginx
+      - "/home/stepanov/nginx/default.conf:/etc/nginx/conf.d/default.conf"
+      # Подгрузить папку с билдами веб сайтов
+      - "/home/stepanov/nginx/builds:/builds"
+    #command: node app.js
+    depends_on:
+      - node-vksplanner
+    ports:
+      - 80:80
+    restart: always
+
+  my-build:
+    hostname: my-build
+    build: 
+      dockerfile: ./my-build    # Путь до Dockerfile
+    image: isakhalin/my-build   # Так будет называть собранный образ
+    deploy:
+      mode: replicated  # Разрешает реплицирование контейнера
+      replicas: 7       # Количество реплик
+    resources:
+      limits:
+        cpus: '0.60' # Доступный ресурс процессора 60%
+        memory: 60M  # Доступная ОЗУ 60Мб
+      reservations:
+        cpus: '0.15' # Доступный ресурс процессора на пике 75% (60+15)
+        memory: 10M  # Доступная ОЗУ на пике 70мб
+    container_name: node-vksplanner
+    ports:
+      - 3005:3005
+    restart: always
+    env_file: ./AppointApp_backend/.env # Путь к env файлу, который подгрузится в контейнер
+
+volumes:
+  mongo-db-backups:
+    name: mongo-db-backups
+
+networks:
+    netBackEnd:
+        ipam:
+            driver: default
+            config:
+                 - subnet: 192.168.0.0/24

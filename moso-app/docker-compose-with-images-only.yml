@@ -2,6 +2,7 @@ version: '3.9'
 
 services:
   mongo:
+    hostname: mongo
     image: mongo
     container_name: moso-app-mongo
     ports:
@@ -17,10 +18,12 @@ services:
 #    restart: unless-stopped
 #    command: --serviceExecutor adaptive
     environment:
+      MONGO_INITDB_DATABASE: vksplanner
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: root
     volumes:
 #      - /home/stepanov/vksplanner-mongo/backups:/mongo/backups
+      - /home/stepanov/vksplanner-mongo/scripts:/docker-entrypoint-initdb.d
       - type: bind
         source: /home/stepanov/vksplanner-mongo/backups
         target: /mongo-backups
