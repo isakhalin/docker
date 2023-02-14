@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   mongo:
-    hostname: mongo
+    #hostname: mongo
     image: mongo
     container_name: moso-app-mongo
     ports:
