@@ -35,7 +35,7 @@ services:
 #        target: /mongo/backups
 #        volume:
 #          nocopy: true
-    command: mongorestore --drop --dir /mongo-backups/230213_2020 -u root -p root
+    #command: mongorestore --drop --dir /mongo-backups/230213_2020 -u root -p root
 
   node-vksplanner:
     image: isakhalin/node-vksplanner
