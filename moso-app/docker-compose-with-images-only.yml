@@ -2,41 +2,25 @@ version: '3.9'
 
 services:
   mongo:
-    #hostname: mongo
+    hostname: mongo
     image: mongo
     container_name: moso-app-mongo
     ports:
       - 27017:27017
-#      - target: 80
-#        host_ip: 127.0.0.1
-#        published: 8080
-#        protocol: tcp
-#        mode: host
     restart: always
-#    restart: "no"
-#    restart: on-failure
-#    restart: unless-stopped
-#    command: --serviceExecutor adaptive
     environment:
       MONGO_INITDB_DATABASE: vksplanner
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: root
     volumes:
-#      - /home/stepanov/vksplanner-mongo/backups:/mongo/backups
-      # Скрипты, которые выполняются при
+#     - /home/stepanov/vksplanner-mongo/backups:/mongo/backups
+      # Скрипты, которые выполняются при создании контейнера:
+      #  1. Скрип init.js создает коллекцию и добавляет 2х пользователей(адмиистратора и пользователя для бека)
       - /home/stepanov/vksplanner-mongo/scripts:/docker-entrypoint-initdb.d
+      # Байнд каталога для бекапов. Сюда делаются бекапы из контейнера mongo
       - type: bind
         source: /home/stepanov/vksplanner-mongo/backups
         target: /mongo-backups
-#      - type: bind
-#        source: /home/stepanov/vksplanner-mongo/mongod.conf
-#        target: /etc/mongod.conf.orig
-#      - type: volume
-#        source: mongo-db-backups
-#        target: /mongo/backups
-#        volume:
-#          nocopy: true
-    #command: mongorestore --drop --dir /mongo-backups/lastbackup -u root -p root
 
   node-vksplanner:
     image: isakhalin/node-vksplanner
@@ -54,27 +38,10 @@ services:
     image: nginx
     container_name: moso-app-nginx
     volumes:
-      - "/home/stepanov/nginx/default.conf:/etc/nginx/conf.d/default.conf"
-      - "/home/stepanov/nginx/builds:/builds"
-    #command: node app.js
+      - /home/stepanov/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - /home/stepanov/nginx/builds:/builds
     depends_on:
       - node-vksplanner
     ports:
       - 80:80
     restart: always
-
-#  moso-app-nginx:
-#    image: isakhalin/moso-app-nginx
-#    container_name: moso-app-nginx
-#    #volumes:
-#    #  - ./web/app:/app
-#    #command: node app.js
-#    depends_on:
-#      - node-vksplanner
-#    ports:
-#      - 80:80
-#    restart: always
-
-#volumes:
-#  mongo-db-backups:
-#    name: mongo-db-backups
