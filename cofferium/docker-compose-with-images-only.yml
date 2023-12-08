@@ -1,0 +1,57 @@
+version: '3.9'
+
+services:
+  mongo:
+    hostname: mongo
+    image: mongo
+    container_name: cofferium-mongo
+    ports:
+      - 27017:27017
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: cofferium
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    volumes:
+#     - /home/stepanov/vksplanner-mongo/backups:/mongo/backups
+      # Скрипты, которые выполняются при создании контейнера:
+      #  1. Скрип init.js создает коллекцию и добавляет 2х пользователей(адмиистратора и пользователя для бека)
+      - /home/stepanov/cofferium-mongo/scripts:/docker-entrypoint-initdb.d
+      # Байнд каталога для бекапов. Сюда делаются бекапы из контейнера mongo
+      - type: bind
+        source: /home/stepanov/cofferium-mongo/backups  # Сюда делаются бекапы. Каталог на хосте
+        target: /mongo-backups                          # Каталог внутри контейнера
+
+  cofferium-node-app:
+    image: isakhalin/cofferium-node-app
+    container_name: cofferium-node-app
+    depends_on:
+      - mongo
+    ports:
+      - 3005:3005
+    restart: always
+    environment:
+      PORT: 3005 # Указывается порт, на котором будет отвечать бекенд
+      DB_URL: mongodb://cofferium:63dsf47bVd3823t@mongo:27017/cofferium?authSource=cofferium # Подключение к БД
+      BASE_VENDISTA_URL: "https://api.vendista.ru:99"
+      TOKEN: "6caba0a3b38b4cf09d4ab863"
+      JWT_ACCESS_SECRET: jwt-secret-key
+      JWT_REFRESH_SECRET: jwt-refresh-secret-key
+      SMTP_HOST: "smtp.gmail.com"
+      SMTP_PORT: 587
+      SMTP_USER: isakhalin@gmail.com
+      SMTP_PASSWORD: pttswgihhpfvlrkq
+      API_URL: http://cofferium.ru:3005
+      CLIENT_URL: http://cofferium.ru
+
+  nginx:
+    image: nginx
+    container_name: nginx
+    volumes:
+      - /home/stepanov/nginx/default.conf:/etc/nginx/conf.d/default.conf  # создаем volume (виртуальный том, который будет доступен в контейнере) [каталог на хосте]:[каталог в контейнере] и копируем в него файл default.conf
+      - /home/stepanov/nginx/builds:/builds   # создаем volume и прокидываем в него builds
+    depends_on:
+      - cofferium-node-app
+    ports:
+      - 80:80
+    restart: always

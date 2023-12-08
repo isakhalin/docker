@@ -4,9 +4,9 @@ docker version	-	-	- Проверить версию докера
 docker ps		-	-	- Показывает запущенные контейнеры
 docker ps -a	-	-	- Показывает список запущенных и остановленных контейнеров
 docker images	-	-	- Показывает список локальных образов
-docker pull hello-world -	- Скачать и сохранить локально образ hello-world
+docker pull hello-world -	-   - Скачать и сохранить локально образ hello-world
 docker run hello-world:latest	- Скачивает образ hello-world, сохраняет его локально и запускает контейнер из образа hello-world
-docker rm b6e3380e1ca6	-	- Удаляет контейнер с ID b6e3380e1ca6
+docker rm b6e3380e1ca6	-	-   - Удаляет контейнер с ID b6e3380e1ca6
 docker rmi [ID/NAME]	-	- Удаляет образ по его ID или имени
 docker run -i -t busybox	- Запустить контейнер busybox и подключиться к процессу, выполняемому в контейнере busybox
 	или docker run -it busybox
@@ -81,6 +81,16 @@ ENV PORT 4200			- Назначает значение переменной PORT 
 EXPOSE ${PORT}			- Указывает на каком порту будет работать контейнер (берет из переменной PORT)
 VOLUME ["/app/data"]		- Подключает вольюм в контейнер 
 CMD ["node", "app.js"]
+-----
+Обычно делаю так:
+-----
+FROM node
+WORKDIR /node-app
+COPY package.json .
+RUN npm install
+COPY . .
+CMD [ "node", "app.js" ]
+
 -----
 
 Чтобы запретить копировать что-либо в контейнер, нужно создать файл .dockerignore рядом с файлом Dockerfile, содержимое:
