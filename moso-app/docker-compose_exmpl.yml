@@ -12,10 +12,10 @@ services:
         published: 8080
         protocol: tcp
         mode: host
-    restart: always | "no" | on-failure | unless-stopped # Параметры авто перезапуска
+    restart: always | "no" | on-failure | unless-stopped # Параметры авто перезапуска, выбрать одно из перечисленного
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_ROOT_USERNAME: root  # Имя пользователя рутовой УЗ, от имени которого создается БД
+      MONGO_INITDB_ROOT_PASSWORD: root  # Пароль пользователя рутовой УЗ, от имени которого создается БД
     volumes:
       # Bind in short syntax
       - /home/stepanov/vksplanner-mongo/backups:/mongo/backups
@@ -29,7 +29,7 @@ services:
         target: /mongo/backups
         volume:
           nocopy: true
-    command: mongorestore --drop --dir /mongo-backups/230213_2020 -u root -p root
+    command: mongorestore --drop --dir /mongo-backups/230213_2020 -u root -p root # Команда, которая будет вызвана при старте контейнера
     #command: --serviceExecutor adaptive
     networks:
            netBackEnd:
