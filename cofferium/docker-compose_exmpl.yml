@@ -17,7 +17,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: root
     volumes:
-      # Bind in short syntax
+      # Bnd in short syntax
       - /home/stepanov/vksplanner-mongo/backups:/mongo/backups
       # Bind in long syntax
       - type: bind
